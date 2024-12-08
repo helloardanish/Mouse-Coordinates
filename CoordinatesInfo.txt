@@ -1,0 +1,11 @@
+2024-12-08 01:21:08 - Position: Point(x=702, y=288)
+2024-12-08 01:29:30 - Position: Point(x=860, y=207)
+2024-12-08 01:29:40 - Position: Point(x=860, y=207)
+click > 2024-12-08 01:38:45 - Position: Point(x=845, y=209)
+Scroll > 2024-12-08 01:30:45 - Position: Point(x=779, y=431)
+Scroll > 2024-12-08 01:32:55 - Position: Point(x=782, y=566)
+
+
+===
+
+
