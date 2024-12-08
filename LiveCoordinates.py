@@ -6,13 +6,22 @@ from threading import Thread
 
 class LiveCoordinates:
     def __init__(self):
-        # Create the main window
-        self.root = tk.Tk()
-        self.root.overrideredirect(True)  # Remove window decorations
-        self.root.attributes('-topmost', True)  # Keep window on top
-        self.root.configure(bg='black')
+        self.is_running = False
+        self.logging_active = False
+        self.root = None
+        self.log_thread = None
 
-        # Create label for coordinates
+        # Create the coordinate window immediately on the main thread
+        self.setup_window()
+
+    def setup_window(self):
+        """Setup the coordinate display window"""
+        self.root = tk.Tk()
+        self.root.overrideredirect(True)
+        self.root.attributes('-topmost', True)
+        self.root.configure(bg='black')
+        self.root.withdraw()  # Hide window initially
+
         self.label = tk.Label(
             self.root,
             text="",
@@ -24,27 +33,41 @@ class LiveCoordinates:
         )
         self.label.pack()
 
-        # Start the logging thread
-        self.logging_active = True
-        self.log_thread = Thread(target=self.log_positions, daemon=True)
-        self.log_thread.start()
+    def start_tracking(self):
+        """Start the coordinate tracking"""
+        if not self.is_running:
+            self.is_running = True
+            self.logging_active = True
 
-        # Update coordinates
-        self.update_position()
+            # Show the window
+            self.root.deiconify()
+
+            # Start the logging thread
+            self.log_thread = Thread(target=self.log_positions, daemon=True)
+            self.log_thread.start()
+
+            # Start updating position
+            self.update_position()
+
+    def stop_tracking(self):
+        """Stop the coordinate tracking"""
+        if self.is_running:
+            self.is_running = False
+            self.logging_active = False
+            self.root.withdraw()  # Hide the window
 
     def update_position(self):
         """Update the coordinate display"""
-        x, y = pyautogui.position()
-        self.label.configure(text=f'X: {x}, Y: {y}')
+        if self.is_running:
+            x, y = pyautogui.position()
+            self.label.configure(text=f'X: {x}, Y: {y}')
+            self.root.geometry(f'+{x + 20}+{y - 30}')
 
-        # Move the window near the cursor
-        self.root.geometry(f'+{x + 20}+{y - 30}')
-
-        # Schedule the next update
-        self.root.after(50, self.update_position)
+        if self.root:
+            self.root.after(50, self.update_position)
 
     def log_positions(self):
-        """Log positions that remain static for more than 5 seconds"""
+        """Log positions that remain static for more than 10 seconds"""
         last_position = None
         last_time = None
 
@@ -56,7 +79,7 @@ class LiveCoordinates:
                     last_position = current_position
                     last_time = time.time()
                 else:
-                    if last_time and time.time() - last_time > 5:
+                    if last_time and time.time() - last_time > 10:
                         log_message = f"{time.strftime('%Y-%m-%d %H:%M:%S')} - Position: {current_position}\n"
                         log_file.write(log_message)
                         log_file.flush()
@@ -66,8 +89,13 @@ class LiveCoordinates:
                 time.sleep(0.1)
 
     def run(self):
-        """Start the application"""
-        try:
+        """Start the main loop"""
+        if self.root:
             self.root.mainloop()
-        finally:
-            self.logging_active = False
+
+    def cleanup(self):
+        """Cleanup resources"""
+        self.stop_tracking()
+        if self.root:
+            self.root.quit()
+            self.root.destroy()
