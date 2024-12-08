@@ -6,6 +6,13 @@ real-time mouse coordinate tracking across multiple displays.
 The tool helps automate processes by making it easy to identify exact screen 
 coordinates while providing persistent logging functionality.
 
+## Tools used:  
+![Static Badge](https://img.shields.io/badge/python-3.13.1-yellow)
+![Static Badge](https://img.shields.io/badge/PySimpleGUI-5.0.7-yellow)
+![Static Badge](https://img.shields.io/badge/PyAutoGUI-0.9.54-yellow)
+![Static Badge](https://img.shields.io/badge/tkinter-yellow)
+
+
 ## Features
 
 ### Real-Time Tracking
