@@ -87,13 +87,13 @@ python3 Main.py
 
 Mouse coordinates will display in a floating window near your cursor
 
-![img.png](img/002.png)
+![img.png](img/006.png)
 
-![img.png](img/003.png)
+![img.png](img/007.png)
 
 Coordinates are automatically logged when the mouse is stationary for 10 seconds
 
-![img.png](img/004.png)
+![img_1.png](img/008.png)
 
 ### Click 'Stop' to pause tracking
 
