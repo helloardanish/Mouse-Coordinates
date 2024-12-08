@@ -1,1 +1,5 @@
+# to build used: pyinstaller --onefile main.py
+# pyinstaller --onefile --noconsole --icon=myicon.ico main.py
+
 build/
+dist/
